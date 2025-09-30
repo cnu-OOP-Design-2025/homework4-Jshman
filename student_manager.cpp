@@ -25,7 +25,7 @@ void StudentManager::deleteStudent(int id) {
 void StudentManager::modifyStudent(const Student& student) {
     /* TODO */
     if (findStudentByID(student.getID()) > -1)
-        students[student.getID() - 1001] = student;
+        students[findStudentByID(student.getID())] = student;
 }
 
 int StudentManager::findStudentByID(int id) const {
