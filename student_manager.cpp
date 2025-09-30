@@ -13,8 +13,9 @@ void StudentManager::addStudent(char const* name, float midterm, float final) {
 
 void StudentManager::deleteStudent(int id) {
     /* TODO */
-    if (findStudentByID(id) > 0){
-        for (int i=id + 1; i<num_of_students; i++) {
+    int idx = findStudentByID(id);
+    if (idx >= 0){
+        for (int i = idx + 1; i < num_of_students; i++) {
             students[i-1] = students[i];
         }
         num_of_students--;
@@ -24,7 +25,7 @@ void StudentManager::deleteStudent(int id) {
 void StudentManager::modifyStudent(const Student& student) {
     /* TODO */
     if (findStudentByID(student.getID()) > -1)
-        students[student.getID() - 1000] = student;
+        students[student.getID() - 1001] = student;
 }
 
 int StudentManager::findStudentByID(int id) const {
@@ -44,7 +45,7 @@ int StudentManager::findBestStudentInMidterm() const {
     for (int idx=0; idx<num_of_students; idx++) {
         best = best.getRecord().getMidterm() < students[idx].getRecord().getMidterm() ? students[idx] : best;
     }
-    return best.getRecord().getMidterm();
+    return best.getID();
 }
 
 int StudentManager::findBestStudentInFinal() const {
@@ -54,17 +55,17 @@ int StudentManager::findBestStudentInFinal() const {
     for (int idx=0; idx<num_of_students; idx++) {
         best = best.getRecord().getFinal() < students[idx].getRecord().getFinal() ? students[idx] : best;
     }
-    return best.getRecord().getFinal();
+    return best.getID();
 }
 
 int StudentManager::findBestStudent() const {
     /* TODO */
-    if (last_student_id <= 1000)    return -1;
+    if (num_of_students <= 0)    return -1;
     Student best = students[0];
     for (int idx=0; idx<num_of_students; idx++) {
-        best = best.getRecord().getFinal() < students[idx].getRecord().getFinal() ? students[idx] : best;
+        best = best.getRecord().getMidterm() + best.getRecord().getFinal() < students[idx].getRecord().getMidterm() + students[idx].getRecord().getFinal() ? students[idx] : best;
     }
-    return best.getRecord().getTotal();
+    return best.getID();
 }
 
 float StudentManager::getMidtermAverage() const {
@@ -73,7 +74,9 @@ float StudentManager::getMidtermAverage() const {
 
     for (int i=0; i<num_of_students; i++) 
         sum += students[i].getRecord().getMidterm();
-    return sum/num_of_students;
+    
+    float avr = sum/num_of_students;
+    return avr;
 }
 
 float StudentManager::getFinalAverage() const {
@@ -87,6 +90,6 @@ float StudentManager::getFinalAverage() const {
 
 float StudentManager::getTotalAverage() const {
     /* TODO */
-    return ((getMidtermAverage() + getFinalAverage())/2.0f);
+    return ((getMidtermAverage() + getFinalAverage()));
 }
 
